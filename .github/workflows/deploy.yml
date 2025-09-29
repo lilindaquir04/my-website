@@ -1,0 +1,29 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]  # когда пушим в ветку main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Простой "тест": проверим, что index.html существует
+    - name: Run tests
+      run: |
+        if [ ! -f index.html ]; then
+          echo "❌ Ошибка: нет index.html!"
+          exit 1
+        fi
+        echo "✅ Тест пройден: index.html найден"
+
+    # Публикуем сайт
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./
